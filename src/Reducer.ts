@@ -1,12 +1,12 @@
 import { combineReducers } from "redux";
-import counterReducer, { ICounterState } from "./reducers/CounterReducer";
+import storyReducer, { IStoryState } from "./reducers/StoryReducer";
 
 export interface IState {
-	counter: ICounterState;
+    stories: IStoryState
 }
 
 export const reducer = combineReducers<IState>({
-	counter: counterReducer,
+    stories: storyReducer
 });
 
 export default reducer;

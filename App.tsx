@@ -3,19 +3,19 @@ import { SafeAreaView, Text, StatusBar, View } from "react-native";
 
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import Counter from "./src/components/Counter";
 import reducer from "./src/Reducer";
+import StoryList from "./src/components/StoryList";
 
 const store = createStore(reducer);
 
 const App = () => {
-	return (
-		<Provider store={store}>
-			<SafeAreaView style={{ flex: 1, backgroundColor: "red" }}>
-				<Counter />
-			</SafeAreaView>
-		</Provider>
-	);
+    return (
+        <Provider store={store}>
+            <SafeAreaView style={{ flex: 1 }}>
+                <StoryList />
+            </SafeAreaView>
+        </Provider>
+    );
 };
 
 export default App;
