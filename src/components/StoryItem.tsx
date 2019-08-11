@@ -38,7 +38,7 @@ class StoryItem extends React.Component<IStoryItemProps, {}> {
             <TouchableOpacity onPress={() => this.props.onPress({ ...this.props })} style={containerStyle}>
                 <View style={styles.storyItem}>
                     <View style={styles.storyNumber}>
-                        <Text style={styles.storyNumberFont}>{this.props.index + 1}</Text>
+                        <Text style={[styles.storyNumberFont, { color: (this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT) }]}>{this.props.index + 1}</Text>
                     </View>
                     <View style={styles.storyBody}>
                         <View style={styles.storyTitleContainer}>
