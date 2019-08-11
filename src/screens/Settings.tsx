@@ -48,7 +48,7 @@ class Settings extends React.Component<ISettingsProps, ISettingsState> {
                     <View style={styles.settingsBody}>
                         <View style={styles.settingsItem}>
                             <View style={styles.settingsCenter}>
-                                <Text style={textStyle}>Sort by: Ascending</Text>
+                                <Text style={textStyle}>Sort score by: Ascending</Text>
                                 <Switch onValueChange={this.props.changeSortOrder} value={this.props.sortOrder === "Asc"} />
                             </View>
                         </View>
@@ -80,8 +80,9 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: `row`,
         alignItems: `center`,
-        justifyContent: `center`,
-        paddingLeft: `5%`
+        justifyContent: `space-between`,
+        paddingLeft: `10%`,
+        marginRight: `10%`
     },
     settingsItem: {
         flex: 1,
