@@ -59,9 +59,7 @@ class Header extends React.Component<IHeaderProps, {}> {
                             />
                         </TouchableOpacity>
                     }
-
                 </View>
-
             </View >
         )
     }

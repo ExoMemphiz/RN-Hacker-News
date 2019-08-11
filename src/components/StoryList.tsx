@@ -30,16 +30,12 @@ class StoryList extends React.Component<IStoryListProps, {}> {
     }
 
     handleRefresh = () => {
-        console.log(`Handling Refresh Pull, loadtype: ${this.props.loadType}`)
         this.props.loadStories(this.props.loadType);
     };
 
     handleNavigate(story: IHackerNewsStory) {
         if (this.props.navigation) {
-            console.log(`Navigation to StoryPage`);
             this.props.navigation.navigate("StoryPage", { story });
-        } else {
-            console.log(`Error, didn't get navigation props...`);
         }
     }
 
@@ -81,35 +77,6 @@ class StoryList extends React.Component<IStoryListProps, {}> {
         );
     }
 }
-
-/*
-
-
-                <ScrollView contentContainerStyle={styles.container}>
-                    
-
-                    <View style={{ flex: 1, marginTop: 20 }}>
-
-                        <TouchableOpacity
-                            onPress={() => this.props.loadStories(this.props.loadType)}
-                        >
-                            <Text>Load API</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 1, marginTop: 10 }}>
-                        <TouchableOpacity onPress={this.props.changeLoadType}>
-                            <Text>{this.props.loadType}</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ flex: 1, marginTop: 10 }}>
-
-                        <TouchableOpacity onPress={this.props.changeSortOrder}>
-                            <Text>{this.props.sortOrder}</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-
-*/
 
 const styles = StyleSheet.create({
     container: {

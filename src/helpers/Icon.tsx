@@ -4,10 +4,8 @@ import { connect } from "react-redux";
 const IconSets: { [IconSet: string]: any } = {
     AntDesign: require('react-native-vector-icons/AntDesign'),
     Feather: require("react-native-vector-icons/Feather"),
-    EvilIcons: require("react-native-vector-icons/EvilIcons"),
     Ionicons: require("react-native-vector-icons/Ionicons"),
     FontAwesome: require("react-native-vector-icons/FontAwesome"),
-    Entypo: require("react-native-vector-icons/Entypo")
 };
 
 interface IconProps {
@@ -37,7 +35,6 @@ class Icon extends React.Component<IconProps, {}> {
         const clonedProps: any = { ...this.props, name: iconName };
         delete clonedProps.iconIdentifier;
 
-        // Support FontAwesome5's solid/light/brand
         if (clonedProps.iconStyle) {
             clonedProps[clonedProps.iconStyle] = true;
         }

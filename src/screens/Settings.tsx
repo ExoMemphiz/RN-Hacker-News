@@ -120,5 +120,3 @@ function mapDispatchToProps(dispatch: Dispatch<IStoryAction>): IDispatchProps {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Settings);
-
-export { styles };

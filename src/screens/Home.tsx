@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
-import PageTitle from "../components/PageTitle";
 import { View, StyleSheet } from "react-native";
+import PageTitle from "../components/PageTitle";
 import StoryList from "../components/StoryList";
 import { getTopStories } from "../api/api";
 import { Dispatch } from "redux";
@@ -9,7 +9,6 @@ import { connect } from "react-redux";
 import { IStoryState } from "../reducers/StoryReducer";
 import { NavigationScreenProp } from "react-navigation";
 import { IState } from "../Reducer";
-import Globals from "../Globals";
 
 interface IDispatchProps {
     loadStories: (loadType: "Single" | "All") => void;
@@ -68,5 +67,3 @@ const styles = StyleSheet.create({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
-
-export { styles };

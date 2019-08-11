@@ -99,5 +99,3 @@ function mapStateToProps(state: IState) {
 }
 
 export default connect(mapStateToProps)(StoryPage);
-
-export { styles };

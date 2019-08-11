@@ -1,5 +1,3 @@
-import { IStoryItemProps } from "./components/StoryItem";
-
 const TEST_STORY: any = {
     by: "Chris",
     descendants: 0,

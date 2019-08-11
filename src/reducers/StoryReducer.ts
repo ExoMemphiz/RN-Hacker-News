@@ -1,6 +1,5 @@
 import { IStoryAction } from "../actions/StoryActions";
 import { IHackerNewsStory } from "../types/types";
-import Globals from "../Globals";
 
 export interface IStoryState {
     stories: Array<IHackerNewsStory>;

@@ -93,5 +93,3 @@ function mapStateToProps(state: IState) {
 }
 
 export default connect(mapStateToProps)(PageTitle);
-
-export { styles };
