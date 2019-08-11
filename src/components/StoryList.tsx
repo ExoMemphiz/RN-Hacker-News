@@ -1,9 +1,6 @@
 import {
     StyleSheet,
     View,
-    Text,
-    TouchableOpacity,
-    ScrollView,
     RefreshControl,
     FlatList,
 } from "react-native";
@@ -15,91 +12,80 @@ import { IStoryState } from "../reducers/StoryReducer";
 import { IStoryAction } from "../actions/StoryActions";
 import { getTopStories } from "../api/api";
 import StoryItem from "./StoryItem";
-import Modal from 'react-native-modal';
 import { IHackerNewsStory } from "../types/types";
+import { NavigationScreenProp } from "react-navigation";
 
 interface IDispatchProps {
     loadStories: (loadType: "Single" | "All") => void;
-    changeLoadType: () => void;
-    changeSortOrder: () => void;
 }
 
-interface IStoryListProps extends IStoryState, IDispatchProps { }
-
-interface IStoryListState {
-    refreshing: boolean;
-    modalInfo: undefined | IHackerNewsStory
+interface IStoryListProps extends IStoryState, IDispatchProps {
+    navigation?: NavigationScreenProp<any, any>;
 }
 
-class StoryList extends React.Component<IStoryListProps, IStoryListState> {
+class StoryList extends React.Component<IStoryListProps, {}> {
     constructor(props: IStoryListProps) {
         super(props);
-
-        this.state = {
-            refreshing: false,
-            modalInfo: undefined
-        };
     }
 
     handleRefresh = () => {
+        console.log(`Handling Refresh Pull, loadtype: ${this.props.loadType}`)
         this.props.loadStories(this.props.loadType);
     };
 
-    renderModal = () => {
-        if (this.state.modalInfo) {
-            return (
-                <View style={styles.modalContent}>
-                    <Text style={{ color: "#FF6600" }}>{this.state.modalInfo.by}</Text>
-                </View>
-            )
+    handleNavigate(story: IHackerNewsStory) {
+        if (this.props.navigation) {
+            console.log(`Navigation to StoryPage`);
+            this.props.navigation.navigate("StoryPage", { story });
+        } else {
+            console.log(`Error, didn't get navigation props...`);
         }
     }
 
-    hideModal = () => {
-        this.setState({
-            modalInfo: undefined
-        })
+    makeFlatList = () => {
+        return (
+            <FlatList style={{ flex: 1, minWidth: `100%` }}
+                data={this.props.stories}
+                renderItem={(story) => {
+                    return <StoryItem key={story.item.id} index={this.getObjectIndex(this.props.stories, story.item)}
+                        {...story.item} {...this.props} onPress={(story) => this.handleNavigate(story)} />;
+                }}
+                keyExtractor={story => `${story.id}`}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.props.loading}
+                        onRefresh={this.handleRefresh}
+                    />
+                }
+            />
+        )
     }
 
-    showModal = (modalInfo: IHackerNewsStory) => {
-        console.log(`Showing Modal!`, modalInfo);
-        this.setState({
-            modalInfo
-        })
+    getObjectIndex(stories: IHackerNewsStory[], story: IHackerNewsStory) {
+        for (let i = 0; i < stories.length; i++) {
+            if (stories[i].id === story.id) {
+                return i;
+            }
+        }
+        throw Error(`Story with id ${story.id} does not exist in story list.`);
     }
 
     render() {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <Modal
-                    isVisible={this.state.modalInfo !== undefined}
-                    backdropColor="black"
-                    backdropOpacity={0.8}
-                    onBackdropPress={this.hideModal}
-                    animationOut="fadeOut"
-                    animationOutTiming={1000}
-                >
-                    <View style={{ flex: 1 }}>
-                        {this.renderModal()}
-                    </View>
-                </Modal>
+                <View style={[styles.loader]}>
+                    {this.makeFlatList()}
+                </View>
+            </View>
+        );
+    }
+}
+
+/*
+
+
                 <ScrollView contentContainerStyle={styles.container}>
-                    <View style={styles.loader}>
-                        <FlatList
-                            data={this.props.stories}
-                            renderItem={story => {
-                                // @ts-ignore
-                                return <StoryItem {...story.item} onPress={(story) => this.showModal(story)} />;
-                            }}
-                            keyExtractor={story => `${story.id}`}
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={false}
-                                    onRefresh={this.handleRefresh}
-                                />
-                            }
-                        />
-                    </View>
+                    
 
                     <View style={{ flex: 1, marginTop: 20 }}>
 
@@ -121,10 +107,8 @@ class StoryList extends React.Component<IStoryListProps, IStoryListState> {
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
-            </View>
-        );
-    }
-}
+
+*/
 
 const styles = StyleSheet.create({
     container: {
@@ -134,17 +118,8 @@ const styles = StyleSheet.create({
     },
     loader: {
         flex: 5,
-        marginBottom: 20,
         marginTop: 20,
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 22,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 4,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
-    },
+    }
 });
 
 function mapStateToProps(state: IState): IStoryState {
@@ -154,9 +129,7 @@ function mapStateToProps(state: IState): IStoryState {
 function mapDispatchToProps(dispatch: Dispatch<IStoryAction>): IDispatchProps {
     return {
         loadStories: (loadType: "Single" | "All") =>
-            getTopStories(loadType)(dispatch),
-        changeLoadType: () => dispatch({ type: "ChangeType" }),
-        changeSortOrder: () => dispatch({ type: "ChangeOrder" }),
+            getTopStories(loadType)(dispatch)
     };
 }
 

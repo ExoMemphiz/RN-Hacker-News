@@ -1,5 +1,6 @@
 import { IStoryAction } from "../actions/StoryActions";
 import { IHackerNewsStory } from "../types/types";
+import Globals from "../Globals";
 
 export interface IStoryState {
     stories: Array<IHackerNewsStory>;
@@ -7,6 +8,7 @@ export interface IStoryState {
     error: Error | undefined;
     loadType: "Single" | "All";
     sortOrder: "Asc" | "Desc";
+    theme: "Light" | "Dark"
 }
 
 const initialState: IStoryState = {
@@ -15,19 +17,18 @@ const initialState: IStoryState = {
     error: undefined,
     loadType: "Single",
     sortOrder: "Asc",
+    theme: "Light"
 };
 
 const storyReducer = (
     state: IStoryState = initialState,
     action: IStoryAction,
 ): IStoryState => {
-    console.log(`Action: ${action.type} has reached storyReducer`);
     switch (action.type) {
         case "Empty":
             return {
                 ...state,
                 stories: [],
-                loading: false,
                 error: undefined,
             };
 
@@ -42,23 +43,22 @@ const storyReducer = (
         case "Loading":
             return {
                 ...state,
-                stories: [],
                 loading: true,
                 error: undefined,
             };
 
         case "Populate":
             if (action.stories) {
-                // console.log(`Adding ${action.stories.length} more stor${action.stories.length > 1 ? "ies" : "y"}`);
+                const stories = state.stories.concat(action.stories).sort((a, b) => {
+                    // Ascending = a - b, descending = b - a
+                    if (state.sortOrder === "Asc") {
+                        return a.score - b.score;
+                    }
+                    return b.score - a.score;
+                });
                 return {
                     ...state,
-                    stories: state.stories.concat(action.stories).sort((a, b) => {
-                        // Ascending = a - b, descending = b - a
-                        if (state.sortOrder === "Asc") {
-                            return a.score - b.score;
-                        }
-                        return b.score - a.score;
-                    }),
+                    stories,
                     loading: false,
                     error: undefined,
                 };
@@ -88,6 +88,12 @@ const storyReducer = (
                 }),
                 sortOrder: state.sortOrder === "Asc" ? "Desc" : "Asc",
             };
+
+        case "ChangeTheme":
+            return {
+                ...state,
+                theme: state.theme === "Light" ? "Dark" : "Light"
+            }
 
         default:
             return initialState;
