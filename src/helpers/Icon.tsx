@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 const IconSets: { [IconSet: string]: any } = {
+    AntDesign: require('react-native-vector-icons/AntDesign'),
     Feather: require("react-native-vector-icons/Feather"),
     EvilIcons: require("react-native-vector-icons/EvilIcons"),
     Ionicons: require("react-native-vector-icons/Ionicons"),

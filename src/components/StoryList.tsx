@@ -14,6 +14,7 @@ import { getTopStories } from "../api/api";
 import StoryItem from "./StoryItem";
 import { IHackerNewsStory } from "../types/types";
 import { NavigationScreenProp } from "react-navigation";
+import Globals from "../Globals";
 
 interface IDispatchProps {
     loadStories: (loadType: "Single" | "All") => void;
@@ -73,7 +74,7 @@ class StoryList extends React.Component<IStoryListProps, {}> {
     render() {
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <View style={[styles.loader]}>
+                <View style={[styles.loader, { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
                     {this.makeFlatList()}
                 </View>
             </View>
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
     },
     loader: {
         flex: 5,
-        marginTop: 20,
     }
 });
 

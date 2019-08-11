@@ -28,10 +28,10 @@ class PageTitle extends React.Component<IPageTitleProps, {}> {
         return (
             <Fragment>
                 <View style={[styles.pageTitleContainer, { backgroundColor: this.props.theme === "Light" ? Globals.LIGHT_THEME : Globals.DARK_THEME }]}>
-                    <View style={styles.sec97d582}>
-                        <View style={styles.s43f0ccbf}>
-                            <View style={styles.s148aa41c}>
-                                <Text style={styles.newsText}>{this.props.title}</Text>
+                    <View style={styles.rowContainer}>
+                        <View style={styles.colContainer}>
+                            <View style={styles.innerContainer}>
+                                <Text style={[styles.newsText, { color: this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : "#777" }]}>{this.props.title}</Text>
                                 <TouchableOpacity
                                     onPress={() => { }}
                                     style={styles.refreshTouchable}
@@ -67,16 +67,16 @@ const styles = StyleSheet.create({
     refreshTouchable: {
         marginTop: 10
     },
-    s148aa41c: {
+    innerContainer: {
         flexDirection: `row`,
         justifyContent: `flex-end`
     },
-    s43f0ccbf: {
+    colContainer: {
         alignItems: `center`,
         flex: 1,
         flexDirection: `column`
     },
-    sec97d582: {
+    rowContainer: {
         flex: 1,
         alignItems: `center`,
         flexDirection: `row`

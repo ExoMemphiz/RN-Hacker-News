@@ -3,10 +3,13 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { IHackerNewsStory } from "../types/types";
 import { IStoryState } from "../reducers/StoryReducer";
 import { connect } from "react-redux";
+import { IState } from "../Reducer";
+import Globals from "../Globals";
 
 export interface IStoryItemProps extends IHackerNewsStory, IStoryState {
     onPress: (story: IHackerNewsStory) => void;
     index: number;
+    theme: "Light" | "Dark";
 }
 
 class StoryItem extends React.Component<IStoryItemProps, {}> {
@@ -26,8 +29,13 @@ class StoryItem extends React.Component<IStoryItemProps, {}> {
     }
 
     render() {
+        const containerStyle = [
+            styles.container,
+            { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) },
+            { borderTopColor: (this.props.theme === "Dark" ? "#333" : "#EEE") }
+        ]
         return (
-            <TouchableOpacity onPress={() => this.props.onPress({ ...this.props })} style={styles.container}>
+            <TouchableOpacity onPress={() => this.props.onPress({ ...this.props })} style={containerStyle}>
                 <View style={styles.storyItem}>
                     <View style={styles.storyNumber}>
                         <Text style={styles.storyNumberFont}>{this.props.index + 1}</Text>
@@ -37,7 +45,7 @@ class StoryItem extends React.Component<IStoryItemProps, {}> {
                             <Text
                                 style={styles.storyTitle}
                                 ellipsizeMode={`tail`}
-                                numberOfLines={2}
+                                numberOfLines={1}
                             >
                                 {this.props.title}
                             </Text>
@@ -49,19 +57,17 @@ class StoryItem extends React.Component<IStoryItemProps, {}> {
                         </View>
                     </View>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity >
         );
     }
 }
-// new Date(new Date().getTime() - (this.props.time * 1000)).getHours()
-// 2 hours ago | By: vanderbildt | 243 points
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        backgroundColor: "#EEE",
-        borderBottomWidth: 2,
-        borderBottomColor: "#AEB6BF"
+        borderTopWidth: 10,
+        paddingBottom: `3%`
     },
     storyItem: {
         flexDirection: `row`,
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
         marginLeft: 5
     },
     storyNumberFont: {
-        paddingTop: 15,
+        paddingTop: `20%`,
         fontSize: 18
     },
     storyTitleContainer: {
@@ -102,4 +108,10 @@ const styles = StyleSheet.create({
     },
 });
 
-export default connect()(StoryItem);
+function mapStateToProps(state: IState) {
+    return {
+        theme: state.stories.theme
+    }
+}
+
+export default connect(mapStateToProps)(StoryItem);

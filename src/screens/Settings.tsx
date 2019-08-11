@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import PageTitle from "../components/PageTitle";
-import { Text, View, StyleSheet, Switch } from "react-native";
+import { Text, View, StyleSheet, Switch, StyleProp, TextStyle } from "react-native";
 import { IStoryState } from "../reducers/StoryReducer";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
@@ -37,27 +37,30 @@ class Settings extends React.Component<ISettingsProps, ISettingsState> {
     }
 
     render() {
-        console.log(this.props.sortOrder);
+        const textStyle: StyleProp<TextStyle> = [
+            styles.settingsOption,
+            { color: this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT }
+        ]
         return (
             <Fragment>
                 <View style={[styles.settingsContainer, { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
-                    <PageTitle title={`Page Settings`} />
+                    <PageTitle title={`Settings`} />
                     <View style={styles.settingsBody}>
                         <View style={styles.settingsItem}>
                             <View style={styles.settingsCenter}>
-                                <Text style={styles.settingsOption}>Sort by: Ascending</Text>
+                                <Text style={textStyle}>Sort by: Ascending</Text>
                                 <Switch onValueChange={this.props.changeSortOrder} value={this.props.sortOrder === "Asc"} />
                             </View>
                         </View>
                         <View style={styles.settingsItem}>
                             <View style={styles.settingsCenter}>
-                                <Text style={styles.settingsOption}>Load Type: Single</Text>
+                                <Text style={textStyle}>Load Type: Single</Text>
                                 <Switch onValueChange={this.props.changeLoadType} value={this.props.loadType === "Single"} />
                             </View>
                         </View>
                         <View style={styles.settingsItem}>
                             <View style={styles.settingsCenter}>
-                                <Text style={styles.settingsOption}>Dark Theme</Text>
+                                <Text style={textStyle}>Dark Theme</Text>
                                 <Switch onValueChange={this.props.changeTheme} value={this.props.theme === "Dark"} />
                             </View>
                         </View>
@@ -72,13 +75,13 @@ class Settings extends React.Component<ISettingsProps, ISettingsState> {
 const styles = StyleSheet.create({
     settingsOption: {
         fontSize: 15,
-        marginRight: 15
     },
     settingsCenter: {
         flex: 1,
         flexDirection: `row`,
         alignItems: `center`,
-        justifyContent: `center`
+        justifyContent: `center`,
+        paddingLeft: `5%`
     },
     settingsItem: {
         flex: 1,

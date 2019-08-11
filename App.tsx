@@ -12,6 +12,7 @@ import StoryPage from "./src/screens/StoryPage";
 import { IHackerNewsStory } from "./src/types/types";
 import { NavigationScreenProps } from "react-navigation";
 import Globals from "./src/Globals";
+import Header from "./src/components/Header";
 
 const store = createStore(reducer);
 
@@ -23,18 +24,8 @@ let RootStack = createStackNavigator({
                 title: `Home`,
                 headerTintColor: `rgba(255, 102, 0, 1)`,
                 headerTransparent: false,
-                headerRight: (
-                    <TouchableOpacity
-                        disabled={false}
-                        // @ts-ignore
-                        onPress={() => { console.log(`Navigating`, this.props); navigation.navigate("Settings") }}
-                        style={[styles.settingsTouchable]}
-                    >
-                        <Icon
-                            style={styles.settingsIcon}
-                            iconIdentifier={`Ionicons/md-settings`}
-                        />
-                    </TouchableOpacity>
+                header: (
+                    <Header navigation={navigation} />
                 ),
                 headerStyle: {
                     textAlign: `center`,
@@ -48,6 +39,9 @@ let RootStack = createStackNavigator({
         screen: Settings,
         navigationOptions: ({ navigation }: NavigationScreenProps<void>) => ({
             title: "Settings",
+            header: (
+                <Header navigation={navigation} />
+            ),
             headerTintColor: `rgba(255, 102, 0, 1)`,
             headerStyle: {
                 textAlign: `center`
@@ -59,6 +53,9 @@ let RootStack = createStackNavigator({
         screen: StoryPage,
         navigationOptions: ({ navigation }: NavigationScreenProps<IHackerNewsStory>) => ({
             title: "StoryPage",
+            header: (
+                <Header navigation={navigation} />
+            ),
             headerTintColor: `rgba(255, 102, 0, 1)`,
             headerStyle: {
                 textAlign: `center`

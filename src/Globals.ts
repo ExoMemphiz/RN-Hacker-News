@@ -23,5 +23,7 @@ export default {
     TEST_STORY,
     STORY_COUNT_TO_FETCH: 10,
     LIGHT_THEME: "white",
-    DARK_THEME: "#2A2A2A"
+    DARK_THEME: "#2A2A2A",
+    LIGHT_THEME_TEXT: "#777",
+    DARK_THEME_TEXT: "#AAA"
 }
