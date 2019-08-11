@@ -45,7 +45,7 @@ class StoryList extends React.Component<IStoryListProps, {}> {
                 data={this.props.stories}
                 renderItem={(story) => {
                     return <StoryItem key={story.item.id} index={this.getObjectIndex(this.props.stories, story.item)}
-                        {...story.item} {...this.props} onPress={(story) => this.handleNavigate(story)} />;
+                        {...story.item} {...this.props} onPress={(story: IHackerNewsStory) => this.handleNavigate(story)} />;
                 }}
                 keyExtractor={story => `${story.id}`}
                 refreshControl={
