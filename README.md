@@ -2,7 +2,7 @@
 
 This app is my solution to the coding assignment described below.
 
-It incorporates all the main features described, using all 3 endpoints, as well as using Redux for state management.  
+It incorporates all the main features described, using all 3 endpoints, this branch uses MobX for state management.  
 I included some minor additional features, accessed via the Settings page, such as:
 
 * The ability to toggle between ascending and descending score order.
