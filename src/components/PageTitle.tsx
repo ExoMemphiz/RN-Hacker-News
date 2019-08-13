@@ -1,17 +1,17 @@
 import React, { Fragment } from "react";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import Icon from "../helpers/Icon";
-import { connect } from "react-redux";
 import Globals from "../Globals";
-import { IState } from "../Reducer";
+import StoryStore from "../stores/StoryStore";
+import { observer } from "mobx-react";
 
 interface IPageTitleProps {
     title: string;
     icon?: string;
     onPress?: () => void;
-    theme: "Light" | "Dark";
 }
 
+@observer
 class PageTitle extends React.Component<IPageTitleProps, {}> {
 
     constructor(props: IPageTitleProps) {
@@ -27,11 +27,11 @@ class PageTitle extends React.Component<IPageTitleProps, {}> {
     render() {
         return (
             <Fragment>
-                <View style={[styles.pageTitleContainer, { backgroundColor: this.props.theme === "Light" ? Globals.LIGHT_THEME : Globals.DARK_THEME }]}>
+                <View style={[styles.pageTitleContainer, { backgroundColor: StoryStore.theme === "Light" ? Globals.LIGHT_THEME : Globals.DARK_THEME }]}>
                     <View style={styles.rowContainer}>
                         <View style={styles.colContainer}>
                             <View style={styles.innerContainer}>
-                                <Text style={[styles.newsText, { color: this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : "#777" }]}>{this.props.title}</Text>
+                                <Text style={[styles.newsText, { color: StoryStore.theme === "Dark" ? Globals.DARK_THEME_TEXT : "#777" }]}>{this.props.title}</Text>
                                 <TouchableOpacity
                                     onPress={() => { }}
                                     style={styles.refreshTouchable}
@@ -86,10 +86,4 @@ const styles = StyleSheet.create({
     }
 });
 
-function mapStateToProps(state: IState) {
-    return {
-        theme: state.stories.theme
-    };
-}
-
-export default connect(mapStateToProps)(PageTitle);
+export default PageTitle;

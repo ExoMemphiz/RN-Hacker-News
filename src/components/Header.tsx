@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { connect } from 'react-redux';
-import { IState } from '../Reducer';
 import Globals from '../Globals';
 import { NavigationScreenProp } from 'react-navigation';
 import Icon from '../helpers/Icon';
+import { observer } from 'mobx-react';
+import StoryStore from '../stores/StoryStore';
 
 interface IHeaderProps {
     navigation?: NavigationScreenProp<any, any>;
-    theme: "Light" | "Dark";
 }
 
+@observer
 class Header extends React.Component<IHeaderProps, {}> {
 
     goBack = () => {
@@ -20,8 +20,8 @@ class Header extends React.Component<IHeaderProps, {}> {
     getHeaderStyle = () => {
         return [
             styles.header,
-            { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) },
-            { borderBottomColor: (this.props.theme === "Dark" ? "#333" : "#EEE") },
+            { backgroundColor: (StoryStore.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) },
+            { borderBottomColor: (StoryStore.theme === "Dark" ? "#333" : "#EEE") },
             { flex: .092 }
         ]
     }
@@ -50,7 +50,7 @@ class Header extends React.Component<IHeaderProps, {}> {
                     {routeName === "Home" &&
                         < TouchableOpacity
                             disabled={false}
-                            onPress={() => { console.log(this.props); this.props.navigation && this.props.navigation.navigate("Settings") }}
+                            onPress={() => { this.props.navigation && this.props.navigation.navigate("Settings") }}
                             style={[{ marginRight: 25 }]}
                         >
                             <Icon
@@ -85,10 +85,4 @@ const styles = StyleSheet.create({
     },
 })
 
-function mapStateToProps(state: IState) {
-    return {
-        theme: state.stories.theme
-    }
-}
-
-export default connect(mapStateToProps)(Header);
+export default Header;

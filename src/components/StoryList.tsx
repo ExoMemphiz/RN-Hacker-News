@@ -5,57 +5,32 @@ import {
     FlatList,
 } from "react-native";
 import React from "react";
-import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { IState } from "../Reducer";
-import { IStoryState } from "../reducers/StoryReducer";
-import { IStoryAction } from "../actions/StoryActions";
 import { getTopStories } from "../api/api";
 import StoryItem from "./StoryItem";
 import { IHackerNewsStory } from "../types/types";
 import { NavigationScreenProp } from "react-navigation";
 import Globals from "../Globals";
+import StoryStore from "../stores/StoryStore";
+import { observer } from "mobx-react";
 
-interface IDispatchProps {
-    loadStories: (loadType: "Single" | "All") => void;
-}
-
-interface IStoryListProps extends IStoryState, IDispatchProps {
+interface IStoryListProps {
     navigation?: NavigationScreenProp<any, any>;
 }
 
+@observer
 class StoryList extends React.Component<IStoryListProps, {}> {
     constructor(props: IStoryListProps) {
         super(props);
     }
 
     handleRefresh = () => {
-        this.props.loadStories(this.props.loadType);
+        getTopStories(StoryStore.loadType);
     };
 
     handleNavigate(story: IHackerNewsStory) {
         if (this.props.navigation) {
             this.props.navigation.navigate("StoryPage", { story });
         }
-    }
-
-    makeFlatList = () => {
-        return (
-            <FlatList style={{ flex: 1, minWidth: `100%` }}
-                data={this.props.stories}
-                renderItem={(story) => {
-                    return <StoryItem key={story.item.id} index={this.getObjectIndex(this.props.stories, story.item)}
-                        {...story.item} {...this.props} onPress={(story: IHackerNewsStory) => this.handleNavigate(story)} />;
-                }}
-                keyExtractor={story => `${story.id}`}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.props.loading}
-                        onRefresh={this.handleRefresh}
-                    />
-                }
-            />
-        )
     }
 
     getObjectIndex(stories: IHackerNewsStory[], story: IHackerNewsStory) {
@@ -68,10 +43,33 @@ class StoryList extends React.Component<IStoryListProps, {}> {
     }
 
     render() {
+
+        // Could potentially be handled in the mobx Store, too.
+        const stories = StoryStore.stories.slice().sort((a, b) => {
+            // Ascending = a - b, descending = b - a
+            if (StoryStore.sortOrder === "Asc") {
+                return a.score - b.score;
+            }
+            return b.score - a.score;
+        });
+
         return (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                <View style={[styles.loader, { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
-                    {this.makeFlatList()}
+                <View style={[styles.loader, { backgroundColor: (StoryStore.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
+                    <FlatList style={{ flex: 1, minWidth: `100%` }}
+                        data={stories}
+                        renderItem={(story) => {
+                            return <StoryItem key={story.item.id} index={this.getObjectIndex(stories, story.item)}
+                                {...story.item} {...this.props} onPress={(story: IHackerNewsStory) => this.handleNavigate(story)} />;
+                        }}
+                        keyExtractor={story => `${story.id}`}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={StoryStore.loading}
+                                onRefresh={this.handleRefresh}
+                            />
+                        }
+                    />
                 </View>
             </View>
         );
@@ -89,18 +87,4 @@ const styles = StyleSheet.create({
     }
 });
 
-function mapStateToProps(state: IState): IStoryState {
-    return state.stories;
-}
-
-function mapDispatchToProps(dispatch: Dispatch<IStoryAction>): IDispatchProps {
-    return {
-        loadStories: (loadType: "Single" | "All") =>
-            getTopStories(loadType)(dispatch)
-    };
-}
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(StoryList);
+export default StoryList;

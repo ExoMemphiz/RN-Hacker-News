@@ -1,17 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { IHackerNewsStory } from "../types/types";
-import { IStoryState } from "../reducers/StoryReducer";
-import { connect } from "react-redux";
-import { IState } from "../Reducer";
 import Globals from "../Globals";
+import StoryStore from "../stores/StoryStore";
+import { observer } from "mobx-react";
 
-export interface IStoryItemProps extends IHackerNewsStory, IStoryState {
+export interface IStoryItemProps extends IHackerNewsStory {
     onPress: (story: IHackerNewsStory) => void;
     index: number;
-    theme: "Light" | "Dark";
 }
 
+@observer
 class StoryItem extends React.Component<IStoryItemProps, {}> {
 
     getTimeSinceText = () => {
@@ -31,14 +30,14 @@ class StoryItem extends React.Component<IStoryItemProps, {}> {
     render() {
         const containerStyle = [
             styles.container,
-            { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) },
-            { borderTopColor: (this.props.theme === "Dark" ? "#333" : "#EEE") }
+            { backgroundColor: (StoryStore.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) },
+            { borderTopColor: (StoryStore.theme === "Dark" ? "#333" : "#EEE") }
         ]
         return (
             <TouchableOpacity onPress={() => this.props.onPress({ ...this.props })} style={containerStyle}>
                 <View style={styles.storyItem}>
                     <View style={styles.storyNumber}>
-                        <Text style={[styles.storyNumberFont, { color: (this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT) }]}>{this.props.index + 1}</Text>
+                        <Text style={[styles.storyNumberFont, { color: (StoryStore.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT) }]}>{this.props.index + 1}</Text>
                     </View>
                     <View style={styles.storyBody}>
                         <View style={styles.storyTitleContainer}>
@@ -108,10 +107,4 @@ const styles = StyleSheet.create({
     },
 });
 
-function mapStateToProps(state: IState) {
-    return {
-        theme: state.stories.theme
-    }
-}
-
-export default connect(mapStateToProps)(StoryItem);
+export default StoryItem;

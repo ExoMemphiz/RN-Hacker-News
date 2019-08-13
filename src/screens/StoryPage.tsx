@@ -4,15 +4,15 @@ import PageTitle from "../components/PageTitle";
 import { IHackerNewsStory } from "../types/types";
 import { NavigationScreenProp } from "react-navigation";
 import Globals from "../Globals";
-import { IState } from "../Reducer";
-import { connect } from "react-redux";
+import { observer } from "mobx-react";
+import StoryStore from "../stores/StoryStore";
 
 interface IStoryPageProps {
     navigation?: NavigationScreenProp<any, { story: IHackerNewsStory }>;
-    theme: "Light" | "Dark";
 }
 
-class StoryPage extends React.Component<IStoryPageProps, {}> {
+@observer
+export default class StoryPage extends React.Component<IStoryPageProps, {}> {
 
     handleGoToURL = () => {
         this.props.navigation && this.props.navigation.goBack();
@@ -27,11 +27,11 @@ class StoryPage extends React.Component<IStoryPageProps, {}> {
                 this.props.navigation.goBack();
             }
             const textStyle = {
-                color: (this.props.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT)
+                color: (StoryStore.theme === "Dark" ? Globals.DARK_THEME_TEXT : Globals.LIGHT_THEME_TEXT)
             }
             return (
                 <Fragment>
-                    <View style={[styles.storyPageContainer, { backgroundColor: (this.props.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
+                    <View style={[styles.storyPageContainer, { backgroundColor: (StoryStore.theme === "Dark" ? Globals.DARK_THEME : Globals.LIGHT_THEME) }]}>
                         <PageTitle title={`Story Info`} />
                         <View style={styles.storyPageBody}>
                             <View style={styles.storyPageInfo}>
@@ -91,11 +91,3 @@ const styles = StyleSheet.create({
         flex: 8
     }
 });
-
-function mapStateToProps(state: IState) {
-    return {
-        theme: state.stories.theme
-    }
-}
-
-export default connect(mapStateToProps)(StoryPage);

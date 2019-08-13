@@ -3,36 +3,30 @@ import { View, StyleSheet } from "react-native";
 import PageTitle from "../components/PageTitle";
 import StoryList from "../components/StoryList";
 import { getTopStories } from "../api/api";
-import { Dispatch } from "redux";
-import { IStoryAction } from "../actions/StoryActions";
-import { connect } from "react-redux";
-import { IStoryState } from "../reducers/StoryReducer";
 import { NavigationScreenProp } from "react-navigation";
-import { IState } from "../Reducer";
+import { observer } from 'mobx-react';
+import StoryStore from '../stores/StoryStore';
 
-interface IDispatchProps {
-    loadStories: (loadType: "Single" | "All") => void;
-}
-
-interface IStoryListProps extends IStoryState, IDispatchProps {
+interface IStoryListProps {
     navigation: NavigationScreenProp<any, any>;
 }
 
-class Home extends React.Component<IStoryListProps, {}> {
+@observer
+export default class Home extends React.Component<IStoryListProps, {}> {
 
     componentDidMount() {
         this.loadStories();
     }
 
     loadStories = () => {
-        this.props.loadStories(this.props.loadType);
+        getTopStories(StoryStore.loadType);
     }
 
     render() {
         return (
             <Fragment>
                 <View style={[styles.homeContainer]}>
-                    <PageTitle title="News" icon="Feather/refresh-cw" onPress={() => { console.log(`PageTitle onPress: ${this.props.loadType}`); this.loadStories() }} />
+                    <PageTitle title="News" icon="Feather/refresh-cw" onPress={() => { console.log(`PageTitle onPress: ${StoryStore.loadType}`); this.loadStories() }} />
                     <View style={styles.storyBody}>
                         <StoryList {...this.props} />
                     </View>
@@ -43,20 +37,6 @@ class Home extends React.Component<IStoryListProps, {}> {
 
 }
 
-function mapStateToProps(state: IState) {
-    return {
-        loadType: state.stories.loadType,
-        theme: state.stories.theme
-    };
-}
-
-function mapDispatchToProps(dispatch: Dispatch<IStoryAction>): IDispatchProps {
-    return {
-        loadStories: (loadType: "Single" | "All") =>
-            getTopStories(loadType)(dispatch)
-    };
-}
-
 const styles = StyleSheet.create({
     storyBody: {
         flex: 8
@@ -65,5 +45,3 @@ const styles = StyleSheet.create({
         flex: 1
     }
 });
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);

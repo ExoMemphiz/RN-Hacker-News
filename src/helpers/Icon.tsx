@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 
 const IconSets: { [IconSet: string]: any } = {
     AntDesign: require('react-native-vector-icons/AntDesign'),
@@ -47,4 +46,4 @@ class Icon extends React.Component<IconProps, {}> {
     }
 }
 
-export default connect()(Icon);
+export default Icon;
